@@ -269,7 +269,6 @@ void parseByte() {
     if (dataBytesRemaining == 0) {                   // If we have received all the data bytes,
       messageBuffer.put(message);                    // put the message in the message buffer,
       dataBytesRemaining = message.numDataBytes;     // and prepare for next message with the
-      Serial.println("");
     }                                                // same header (known as "running status").
     
 
@@ -338,8 +337,13 @@ void transferRealtime() {
 
 void sendByteOut() {
   if ( outputBuffer.notEmpty() ) {
-    midiSerial.write(outputBuffer.peek());
-    Serial.print(outputBuffer.get(), DEC);
+    uint8_t byteToSend;
+    byteToSend = outputBuffer.get();
+    midiSerial.write(byteToSend);
+    if (isHeader(byteToSend)) {
+      Serial.println();
+    }
+    Serial.print(byteToSend, DEC);
     Serial.print(" ");
   }
 }
@@ -448,17 +452,17 @@ void loop() {
   processBuffers();   // are not dropped and buffers do not fill up
   
   if ( millis() > delaytracker) { // If we've waited long enough...
-    //Serial.print(delaytracker, DEC);
-    delaytracker = millis() + 1000; // schedule the next time we run this
+    
+    delaytracker = millis() + 2000; // schedule the next time we run this
 
     // Add MIDI messages to message buffer based on analog pin values
     
-    //messageBuffer.add(0xB0, 0x01, (analogVal[0] >> 3) % 128);
-    //processBuffers();
-    //messageBuffer.add(0xB0, 0x43, (analogVal[1] >> 3) % 128);
-    //processBuffers(); 
-    //messageBuffer.add(0xB0, 0x40, (analogVal[2] >> 3) % 128);
-    //processBuffers();
+    messageBuffer.add(0xB0, 0x01, (analogVal[0] >> 3) % 128);
+    processBuffers();
+    messageBuffer.add(0xB0, 0x43, (analogVal[1] >> 3) % 128);
+    processBuffers(); 
+    messageBuffer.add(0xB0, 0x40, (analogVal[2] >> 3) % 128);
+    processBuffers();
     
   }
   /*Put any code you like here! You can read the values in the array analogVal,
