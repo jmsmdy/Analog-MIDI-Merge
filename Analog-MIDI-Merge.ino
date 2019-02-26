@@ -145,8 +145,9 @@ struct _message_buffer {
   }
   _message get() {              // should only be called if buffer not empty
     freeSpots++;
+    uint8_t oldtail = tail;
     tail = (tail + 1) % 32;
-    return message[(tail - 1) % 32];    
+    return message[oldtail];    
   }
   _message peek() {
     return message[tail];    
@@ -183,8 +184,9 @@ struct _byte_buffer {
   }
   uint8_t get() {                 // should only be called if buffer not empty
     freeBytes++;
+    uint8_t oldtail = tail;
     tail = (tail + 1) % 32;
-    return bytes[(tail - 1) % 32];    
+    return bytes[oldtail];    
   }
   uint8_t peek() {
     return bytes[tail];    
@@ -250,9 +252,8 @@ void parseByte() {
   if (isRealtimeMessage(inputBuffer.peek())) {          // Handle realtime status bytes
 
     realtimeBuffer.put(inputBuffer.get());   // Put realtime messages in the realtime buffer
-
+    
   } else if (isHeader(inputBuffer.peek())) {            // Handle non-realtime status bytes
-
      message.header = inputBuffer.get();                           // Fill out the information
      message.numDataBytes = numDataBytes(message.header);          // we can deduce about the 
      message.channelMessage = isChannelMessage(message.header);    // message from its header
@@ -268,7 +269,9 @@ void parseByte() {
     if (dataBytesRemaining == 0) {                   // If we have received all the data bytes,
       messageBuffer.put(message);                    // put the message in the message buffer,
       dataBytesRemaining = message.numDataBytes;     // and prepare for next message with the
+      Serial.println("");
     }                                                // same header (known as "running status").
+    
 
   } else {            // If we were not expecting a data byte but received one, either we dropped
                       // a byte, or are receiving system exclusive data (which we are not handling).
@@ -291,6 +294,7 @@ void transferMessageByte() {
     if (messageBuffer.notEmpty()) {             // and a new message is available,
       tempMessage = messageBuffer.get();        // get it from the message buffer.
       readyForNextMessage = false;
+      bytesTransferred = 0;
       /*
        * This would be the place to put processing of MIDI messages in. 
        * E.g., you could filter for Note On events and transpose them.
@@ -335,7 +339,8 @@ void transferRealtime() {
 void sendByteOut() {
   if ( outputBuffer.notEmpty() ) {
     midiSerial.write(outputBuffer.peek());
-    Serial.println(outputBuffer.get());
+    Serial.print(outputBuffer.get(), DEC);
+    Serial.print(" ");
   }
 }
 
@@ -424,7 +429,8 @@ void setup() {
   
   // Initialize serial interfaces
   
-  Serial.begin(9600); 
+  Serial.begin(115200);
+  midiSerial.begin(31250); 
   Serial.println("Serial Communication Started");
 } 
 
@@ -434,25 +440,25 @@ void setup() {
 // Main Loop //
 ///////////////
 
+unsigned long int delaytracker = 0; // Used to space out analog MIDI messages
+
 void loop() {
-  char i;
-  unsigned long int delaytracker = 0; // Used to space out analog MIDI messages
 
   readInputMIDI();    // These need to be called often to ensure MIDI messages 
   processBuffers();   // are not dropped and buffers do not fill up
   
   if ( millis() > delaytracker) { // If we've waited long enough...
-    
-    delaytracker = millis() + 100; // schedule the next time we run this
+    //Serial.print(delaytracker, DEC);
+    delaytracker = millis() + 1000; // schedule the next time we run this
 
     // Add MIDI messages to message buffer based on analog pin values
     
-    messageBuffer.add(0xB0, 0x01, (analogVal[0] >> 3) % 128);
-    processBuffers();
-    messageBuffer.add(0xB0, 0x43, (analogVal[1] >> 3) % 128);
-    processBuffers(); 
-    messageBuffer.add(0xB0, 0x40, (analogVal[2] >> 3) % 128);
-    processBuffers();
+    //messageBuffer.add(0xB0, 0x01, (analogVal[0] >> 3) % 128);
+    //processBuffers();
+    //messageBuffer.add(0xB0, 0x43, (analogVal[1] >> 3) % 128);
+    //processBuffers(); 
+    //messageBuffer.add(0xB0, 0x40, (analogVal[2] >> 3) % 128);
+    //processBuffers();
     
   }
   /*Put any code you like here! You can read the values in the array analogVal,
