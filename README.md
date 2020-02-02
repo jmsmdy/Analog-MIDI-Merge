@@ -1,5 +1,9 @@
 # Analog-MIDI-Merge
-Runs on Arduino Nano. Generates MIDI messages from values of analog pins, and merges these with MIDI messages received on digital pin D8, and transmits the merged data to digital pin D9. Latency is currently <10ms. 
+Runs on Arduino Nano and other ATmega328 based devices. Generates MIDI messages from values of analog pins, and merges these with MIDI messages received on digital pin D8, and transmits the merged data to digital pin D9. Latency is currently <10ms.
+
+Please check out the [Technical Wiki](https://github.com/jmsmdy/Analog-MIDI-Merge/wiki) for more details about what's going on under the hood.
+
+## Hardware and Usage
 
 A detailed hardware guide for this project is forthcoming. For the time being, the following website gives some information about wiring MIDI jacks: http://www.limulo.net/website/coding/physical-computing/midi-interface.html. For the MIDI input, you need an optoisolator (this is to prevent damage to equipment if there is a malfunction). If you are going to be plugging in external potentiometers through a 1/4" TRS jack (e.g. footpedals) for analog input, it is recommended to wire some fixed resistors in series so nothing catastrophic happens if 5V is bridged to ground.  
 
