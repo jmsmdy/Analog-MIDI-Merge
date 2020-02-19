@@ -7,10 +7,10 @@ Please check out the [Technical Wiki](https://github.com/jmsmdy/Analog-MIDI-Merg
 
 This software is designed to work with hardware according to the following schematic:
 
-![](Images/SCH v1.0.png)
+![Schematic](Images/SCH v1.0.png)
 
 The following gives a compact PCB layout for this circuit:
-![](Images/PCB v1.0.png)
+![PCB](Images/PCB v1.0.png)
 
 A detailed hardware guide with some revisions to the hardware for this project is forthcoming. 
 
