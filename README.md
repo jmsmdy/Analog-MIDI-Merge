@@ -3,9 +3,18 @@ Runs on Arduino Nano and other ATmega328 based devices. Generates MIDI messages 
 
 Please check out the [Technical Wiki](https://github.com/jmsmdy/Analog-MIDI-Merge/wiki) for more details about what's going on under the hood.
 
-## Hardware and Usage
+## Hardware
 
-A detailed hardware guide for this project is forthcoming. For the time being, the following website gives some information about wiring MIDI jacks: http://www.limulo.net/website/coding/physical-computing/midi-interface.html. For the MIDI input, you need an optoisolator (this is to prevent damage to equipment if there is a malfunction). If you are going to be plugging in external potentiometers through a 1/4" TRS jack (e.g. footpedals) for analog input, it is recommended to wire some fixed resistors in series so nothing catastrophic happens if 5V is bridged to ground.  
+This software is designed to work with hardware according to the following schematic:
+
+![](Images/SCH v1.0.png)
+
+The following gives a compact PCB layout for this circuit:
+![](Images/PCB v1.0.png)
+
+A detailed hardware guide with some revisions to the hardware for this project is forthcoming. 
+
+## Details and Usage
 
 This project makes use of Paul Stroffregen's AltSoftSerial library, which uses hardware-specific tricks to reduce latency of software serial writes and reads. If you want to run this on another device besides the Nano, you should consult the documentation for AltSoftSerial to verify compatibility. The number of MIDI inputs and outputs is limited. It's possible to extend this code to have up to two MIDI inputs and two MIDI outputs simultaneously by using both AltSoftSerial (using pins D8 and D9 on the Nano) and the hardware serial interface (using pins RX and TX), at the cost of losing the ability to use the USB port for serial at the same time. If you want to merge two external MIDI signals (as opposed to just merging internally generated MIDI signals with an external MIDI signal), this code can be easily modified to to handle it: just duplicate the code handling the message buffers, and filter out the realtime messages from one input (otherwise timing clock signals from one device may interfere with the other). Some handy references for MIDI messages are avaiable here: https://www.midi.org/specifications/item/table-1-summary-of-midi-message and here: http://midi.teragonaudio.com/tech/midispec/run.htm.
 
