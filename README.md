@@ -7,12 +7,12 @@ Please check out the [Technical Wiki](https://github.com/jmsmdy/Analog-MIDI-Merg
 
 This software is designed to work with hardware according to the following schematic:
 
-![Schematic](Images/SCH v1.0.png)
+![Schematic](SCHv1.0.png)
 
 The following gives a compact PCB layout for this circuit:
-![PCB](Images/PCB v1.0.png)
+![PCB](PCBv1.0.png)
 
-A detailed hardware guide with some revisions to the hardware for this project is forthcoming. 
+A detailed hardware guide with some revisions to the hardware for this project is forthcoming.
 
 ## Details and Usage
 
@@ -20,7 +20,7 @@ This project makes use of Paul Stroffregen's AltSoftSerial library, which uses h
 
 Analog inputs are handled in a low-level way by writing and reading directly to the ADC registers, which is the only way to ensure the analog reads don't interfere with the very stringent timing requirements of the AltSoftSerial library. The ADC is set to continuous read mode, and interrupts are used to allow other code to run while the ADC makes it readings. Information about non-blocking analog reads can be found here: https://meettechniek.info/embedded/arduino-analog.html.
 
-Information is processed with four buffers: an raw input buffer, a non-realtime message buffer, a realtime message buffer, and a raw output buffer. The input buffer is populated with raw data from the MIDI input. The non-realtime message buffer stores messages like Note On and Note Off in a structured format which is easy to read, modify, and add to. The realtime buffer stores time-critical messages like timing clicks. These buffers are populated by parsing the raw data from the input buffer. The output buffer is then populated using the non-realtime and realtime message buffers. To add new MIDI messages to the existing stream is as easy as `messageBuffer.put(your_midi_message);` 
+Information is processed with four buffers: an raw input buffer, a non-realtime message buffer, a realtime message buffer, and a raw output buffer. The input buffer is populated with raw data from the MIDI input. The non-realtime message buffer stores messages like Note On and Note Off in a structured format which is easy to read, modify, and add to. The realtime buffer stores time-critical messages like timing clicks. These buffers are populated by parsing the raw data from the input buffer. The output buffer is then populated using the non-realtime and realtime message buffers. To add new MIDI messages to the existing stream is as easy as `messageBuffer.put(your_midi_message);`
 
 If you change some of the formatting of the data printed to the Serial port, you can also use it with Hairless MIDI<->Serial Bridge to connect a MIDI keyboard and some analog inputs (such as pedals, sliders, knobs) to DAW software on a computer. The Arduino Nano has 8 analog inputs, and other compatible boards like the Teesny have even more, if you require a lot of analog inputs.
 
