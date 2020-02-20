@@ -1,7 +1,7 @@
 # Analog-MIDI-Merge
 Runs on Arduino Nano and other ATmega328 based devices. Generates MIDI messages from values of analog pins, and merges these with MIDI messages received on digital pin D8, and transmits the merged data to digital pin D9. Latency is currently <10ms.
 
-Please check out the [Technical Wiki](https://github.com/jmsmdy/Analog-MIDI-Merge/wiki) for more details about what's going on under the hood.
+### Please check out the [Technical Wiki](https://github.com/jmsmdy/Analog-MIDI-Merge/wiki) for more details about what's going on under the hood.
 
 ## Hardware
 
