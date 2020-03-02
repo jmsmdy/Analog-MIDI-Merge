@@ -5,7 +5,7 @@ Runs on Arduino Nano and other ATmega328 based devices. Generates MIDI messages 
 
 ## Hardware
 
-This software is designed to work with hardware according to the following schematic:
+This software is designed to work with custom hardware according to the following schematic:
 
 ![Schematic](SCHv1.0.png)
 
